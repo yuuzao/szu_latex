@@ -1,0 +1,82 @@
+\documentclass[a4paper,12pt,openany,twoside]{book}
+
+% 当目录多于1页时，使用\thispagestyle{empty}和\pagestyle{empty}，都无法完全清除目录的页眉页脚格式，需要使用到下面的\AtBeginDocument{}代码
+\AtBeginDocument{
+	\addtocontents{toc}{\protect\thispagestyle{empty}}%
+	\addtocontents{lof}{\protect\thispagestyle{empty}}%
+}
+
+% 定义本文所使用宏包
+\input{setup/package}
+% 定义本文样式                    
+\input{setup/format}     
+
+% 开始全文
+\begin{document}                           
+
+
+% 以下是论文导言部分，包括论文的封面，中英文摘要和中文目录
+\frontmatter                               
+
+\clearpage
+\input{Tex/cover}  % 封面							
+
+\input{Tex/copyright}   % 诚信说明                       
+
+\input{Tex/cnabstract}  % 中文摘要						
+\input{Tex/enabstract}  % 英文摘要						
+
+\clearpage
+\pagestyle{empty}  % 去掉页眉页脚
+
+% 目录，没有英文目录
+% -> 在下面修改“目录”字样
+\renewcommand{\contentsname}{\erhao\song\bfseries\hspace*{\fill}目\qquad 录\hspace*{\fill}} 
+
+\tableofcontents % 中文目录                  
+
+\clearpage
+\cleardoublepage
+
+% 正文部分
+\defaultfont
+\pagestyle{plain}
+\mainmatter\sloppy\raggedbottom
+%\renewcommand{\ALC@linenosize}{\xiaosi}
+\renewcommand\arraystretch{1.5}
+\setlength{\intextsep}{2pt}
+\setlength{\abovecaptionskip}{2pt}
+\setlength{\belowcaptionskip}{2pt}
+
+% 在下面插入正文章节
+% 内容比较多的时候，编译速度较慢，可以将不同章节放在不同文件中，再注释掉其他章节，只编译正在撰写的章节，以提升编译速度
+% 文件名不要后缀！
+\include{Tex/intros} 							
+\include{Tex/figures}
+\include{Tex/equations}						
+\include{Tex/tables}
+\include{Tex/others}
+\include{Tex/conclusion}
+
+% 参考文献
+% -> Note: 当文章中没有任何参考文献时，编译会产生`Something's wrong--perhaps a missing \item. \end{thebibliography}`错误
+% -> 这时在任何地方使用`cite{*}`即可避免，或者不使用bibtex编译。
+\defaultfont
+\bibliographystyle{gbt7714} % gbt7714-2015
+\urlstyle{same}  % 设置参考文献url的字体
+
+% 参考文献加入到中文目录
+\phantomsection
+\addcontentsline{toc}{chapter}{参考文献}
+
+%\nocite{*}  % 若将此命令屏蔽掉，则未引用的文献不会出现在文后的参考文献中。 
+\bibliography{references}					
+
+% \include{Tex/appendix}  % 附录
+\include{Tex/acknowledgements}  % 致谢
+\include{Tex/publications}  % 研究成果
+\clearpage
+
+
+% 结束全文
+\end{document}                                    
